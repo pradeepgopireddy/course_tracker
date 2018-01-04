@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Instructors</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th> # </th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Bio</th>
+      <th> Courses </th>
+      <th> Actions </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @instructors.each_with_index do |instructor, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= link_to instructor.name, instructor %></td>
+        <td><%= instructor.email %></td>
+        <td><%= instructor.bio %></td>
+        <td>
+          <% if instructor.courses.empty? %>
+            <p> N/A</p>
+          <% else %>
+            <% instructor.courses.each do |course| %>
+              <%= course.name %><br/>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= link_to 'Edit', edit_instructor_path(instructor) %></td>
+        <td><%#= link_to 'Destroy', instructor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Instructor', new_instructor_path %>
+<% data = {}
+  @instructors.each do |instructor|
+    total = 0
+    instructor.courses.each do |course|
+      total += course.students.count
+    end
+    data[instructor.name] = total
+end
+  %>
+  <%= data %>
+  <%= bar_chart(data) %>
+  <%= pie_chart(data) %>

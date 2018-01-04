@@ -1,0 +1,69 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Students</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th> # </th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Major</th>
+      <th> Courses </th>
+      <th> Actions </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @students.each_with_index do |student, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= link_to student.name, student %></td>
+        <td><%= student.email %></td>
+        <td><%= student.major %></td>
+        <td>
+            <%if student.courses.empty? %>
+                <p>N/A</p>
+            <% else %>
+                <% student.courses.each do |course| %>
+                    <%= course.name %><br/>
+                <% end %>
+            <% end %>
+        </td>
+        <td><%= link_to 'Edit', edit_student_path(student) %> | <%= link_to 'Destroy', student, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Student', new_student_path %>
+<% birth_years = []
+  birth_months = []
+Student.pluck(:dob).each do |dob|
+  birth_years.push(dob.year)
+  birth_months.push(dob.strftime("%B"))
+  end
+%>
+
+<% years_data = {}
+years = (1982..1999).to_a
+years.each do |year|
+  years_data[year] = birth_years.count(year)
+  end
+%>
+<% months_data = {}
+calender_months = Date::MONTHNAMES
+calender_months.each do |month|
+  if month.nil?
+    next
+  else
+    months_data[month] = birth_months.count(month)
+  end
+end
+%>
+<%= years_data %><br/>
+<%= months_data %>
+<%= column_chart(years_data) %>
+<%= column_chart(months_data) %>

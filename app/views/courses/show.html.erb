@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @course.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @course.description %>
+</p>
+
+<p>
+  <strong>Instructor:</strong>
+  <%= @course.instructor.name %>
+</p>
+<h3>Students Enrolled - <%= @course.registrations.pluck(:course_id).count %></h3>
+<% if @course.registrations.empty? %>
+	<p>No students yet enrolled</p>
+<% else %>
+	<ul>
+	<% @course.registrations.each do |registration| %>
+		<li><%= link_to registration.student.name, registration.student %></li>
+	<% end %>
+	</ul>
+<% end %>
+<%= link_to 'Edit', edit_course_path(@course) %> |
+<%= link_to 'Back', courses_path %>

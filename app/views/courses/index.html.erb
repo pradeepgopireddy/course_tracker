@@ -1,0 +1,43 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Courses</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th> # </th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Instructor</th>
+      <th> Students_Count </th>
+      <th> Action </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @courses.each_with_index do |course, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= link_to course.name, course  %></td>
+        <td><%= course.description %></td>
+        <td><%= link_to course.instructor.name, course.instructor %></td>
+        <td><%= course.registrations.pluck(:course_id).size %></td>
+        <td><%= link_to 'Edit', edit_course_path(course) %></td>
+        <td><%#= link_to 'Destroy', course, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Course', new_course_path %><br/>
+<% data = {}
+  @courses.each do |course|
+    data[course.name] = course.students.length
+    end
+%>
+<%= data %>
+
+<%= column_chart(data) %>
+<%= pie_chart(Course.show_chart) %>
