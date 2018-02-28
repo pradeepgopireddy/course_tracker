@@ -1,57 +1,62 @@
 <p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-md-8">
+    <h1>Listing Students</h1>
+    <table class="table table-striped", id="studentsTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Major</th>
+          <th> Courses </th>
+          <th> Actions </th>
+        </tr>
+      </thead>
 
-<h1>Students</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th> # </th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Major</th>
-      <th> Courses </th>
-      <th> Actions </th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @students.each_with_index do |student, index| %>
-      <tr>
-        <td><%= index + 1 %></td>
-        <td><%= link_to student.name, student %></td>
-        <td><%= student.email %></td>
-        <td><%= student.major %></td>
-        <td>
+      <tbody id ="tableBody">
+        <% @students.each do |student| %>
+        <tr>
+          <td><%= link_to student.name, student %></td>
+          <td><%= student.email %></td>
+          <td><%= student.major %></td>
+          <td>
             <%if student.courses.empty? %>
-                <p>N/A</p>
+            <p>N/A</p>
             <% else %>
-                <% student.courses.each do |course| %>
-                    <%= course.name %><br/>
-                <% end %>
+            <% student.courses.each do |course| %>
+            <%= course.name %><br/>
             <% end %>
-        </td>
-        <td><%= link_to 'Edit', edit_student_path(student) %> | <%= link_to 'Destroy', student, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+            <% end %>
+          </td>
+          <td><%= link_to 'Edit', edit_student_path(student) %> | <%= link_to 'Destroy', student, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+  </div>
+  <div class="col-md-4">
+    <%= render 'form', student: @student %>
+  </div>
+</div>
+
 
 <br>
 
 <%= link_to 'New Student', new_student_path %>
 <% birth_years = []
-  birth_months = []
+birth_months = []
 Student.pluck(:dob).each do |dob|
   birth_years.push(dob.year)
   birth_months.push(dob.strftime("%B"))
-  end
+end
 %>
 
 <% years_data = {}
 years = (1982..1999).to_a
 years.each do |year|
   years_data[year] = birth_years.count(year)
-  end
+end
 %>
 <% months_data = {}
 calender_months = Date::MONTHNAMES
@@ -63,7 +68,13 @@ calender_months.each do |month|
   end
 end
 %>
-<%= years_data %><br/>
-<%= months_data %>
+<%#= years_data %>
+<%#= months_data %>
 <%= column_chart(years_data) %>
 <%= column_chart(months_data) %>
+<script type="text/javascript">
+$('#student_city_id').chosen();
+  $(document).ready(function(){
+    $('#studentsTable').DataTable();
+  });
+</script>

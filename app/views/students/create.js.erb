@@ -1,0 +1,6 @@
+<% if @student.errors.any? %>
+	$('#errors').html("<%= escape_javascript render 'errors' %>");
+<%else %>
+	$("#errors").hide();
+	$('#tableBody').prepend("<%= escape_javascript render 'student'%>")
+<% end %>

@@ -1,4 +1,4 @@
-<%= form_with(model: instructor, local: true) do |form| %>
+<%= form_with(model: instructor, local: true, id: "instructor_form") do |form| %>
   <% if instructor.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(instructor.errors.count, "error") %> prohibited this instructor from being saved:</h2>
@@ -11,22 +11,134 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group" id="nameGroup">
     <%= form.label :name %>
-    <%= form.text_field :name, id: :instructor_name %>
+    <%= form.text_field :name, id: :instructor_name, class: "form-control" %>
+    <span id="nameError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="emailGroup">
     <%= form.label :email %>
-    <%= form.text_field :email, id: :instructor_email %>
+    <%= form.text_field :email, id: :instructor_email, class: "form-control" %>
+    <span id="emailError"></span>
   </div>
 
-  <div class="field">
+  <div class="form-group" id="bioGroup">
     <%= form.label :bio %>
-    <%= form.text_area :bio, id: :instructor_bio %>
+    <%= form.text_area :bio, id: :instructor_bio, class:"form-control" %>
+    <span id="bioError"></span>
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Submit", class: "btn btn-primary", id: "submit" %> or
+    <a href="#", id="reset", class="btn btn-outline-warning" > reset</a>
   </div>
 <% end %>
+<script type="text/javascript">
+    
+    var nameFormat = /^[a-zA-Z ]*$/;
+    var emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    var formHandle = document.querySelector('#instructor_form');
+    var nameHandle = document.getElementById('instructor_name');
+    var emailHandle = document.getElementById('instructor_email');
+    var bioHandle = document.getElementById('instructor_bio');
+    var submitHandle = document.getElementById('submit');
+
+
+    var nameErrorHandle = document.getElementById('nameError');
+    var emailErrorHandle = document.getElementById('emailError');
+    var bioErrorHandle = document.getElementById('bioError');
+
+    var nameGroupHandle = document.getElementById('nameGroup');
+    var emailGroupHandle = document.getElementById('emailGroup');
+    var bioGroupHandle = document.getElementById('bioGroup');
+
+    var validator = {
+      nameValid: false,
+      emailValid: false,
+      bioValid: false
+    };
+    emailHandle.addEventListener('blur', function(){
+      emailValidation();
+    }, false)
+    function nameValidation(){
+      if(nameHandle.value === ""){
+        validator.nameValid = false;
+        nameErrorHandle.innerHTML = "can't be blank";
+        nameGroupHandle.classList.remove('formSuccess');
+        nameGroupHandle.classList.add('formError');
+      }else if(!nameFormat.test(nameHandle.value)){
+        validator.nameValid = false;
+        nameErrorHandle.innerHTML = "should be alphabets";
+        nameGroupHandle.classList.remove('formSuccess');
+        nameGroupHandle.classList.add('formError');
+      }else{
+        validator.nameValid = true;
+        nameErrorHandle.innerHTML = "";
+        nameGroupHandle.classList.remove('formError');
+        nameGroupHandle.classList.add('formSuccess');
+      }
+    }
+
+    function emailValidation(){
+      if(emailHandle.value === ""){
+      validator.emailValid = false;
+      emailErrorHandle.innerHTML = "can't be blank";
+      }else if(!emailFormat.test(emailHandle.value)){
+        validator.emailValid = false;
+        emailErrorHandle.innerHTML = "should be a valid email";
+      }else{
+        // validator.emailValid = false;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', `/instructors/check_email_present?email=${emailHandle.value}`, true);
+        xhr.onreadystatechange = function(){
+          if(xhr.readyState === 4 && xhr.status === 200){
+            var response = JSON.parse(xhr.responseText);
+            if(response.msg){
+              validator.emailValid = true;
+              emailErrorHandle.innerHTML = "can be used";
+            }else{
+              validator.emailValid = false;
+              emailErrorHandle.innerHTML = "email already taken";
+            }
+          }
+        }
+      xhr.send();
+      }
+    }
+
+    function bioValidation(){
+      if(bioHandle.value === ""){
+        validator.bioValid = false;
+        bioErrorHandle.innerHTML = "can't be blank";
+      }else if(!nameFormat.test(bioHandle.value)){
+        validator.bioValid = false;
+        bioErrorHandle.innerHTML = "should be alphabets";
+      }else{
+        validator.bioValid = true;
+        bioErrorHandle.innerHTML = "";
+      }
+    }
+    formHandle.addEventListener('submit', function(e){
+      nameValidation();
+      emailValidation();
+      bioValidation();
+      if(Object.values(validator).includes(false)){
+        e.preventDefault();
+        setTimeout(function(){
+          submitHandle.disabled = false;
+        }, 100);
+      }else{
+
+        
+      }
+    }, false)
+    document.querySelector('#reset').addEventListener('click', function(e){
+      e.preventDefault();
+      formHandle.reset();
+      nameErrorHandle.innerHTML = "";
+      emailErrorHandle.innerHTML = "";
+      bioErrorHandle.innerHTML = "";
+    }, false)
+  </script>

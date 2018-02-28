@@ -1,0 +1,7 @@
+<% if @course.errors.any? %>
+	$('#errors').html("<%= escape_javascript render 'errors'%>");
+<% else %>
+  $('#errors').hide();
+  $('#addCourse').modal('hide');
+  $('#courseList').prepend("<%= escape_javascript render 'course' %>");
+<% end %>

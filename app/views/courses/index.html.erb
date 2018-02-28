@@ -1,7 +1,44 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Courses</h1>
+<h2> Listing Courses</h2>
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCourse">
+  Add Course
+  </button>
 
+  <!-- Modal -->
+  <div class="modal fade" id="addCourse" tabindex="-1" role="dialog" aria-labelledby="addCourseLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCourseLabel">Add a new course</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <%= render 'form', course: @course %>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="row", id="courseList">
+  <% @courses.each do |course| %>
+    <div class="col-md-4", style="padding-bottom: 15px">
+      <div class="card">
+        <img class="card-img-top" src="http://placeimg.com/286/180/any?t=1519715668565" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title"><%= course.name %></h5>
+          <p class="card-text"><%= course.description.truncate(100)%><%= link_to "view more", course %></p>
+          <%= link_to "Enroll", new_student_path, class: "btn btn-primary" %>
+        </div>
+         <div class="card-footer">
+      <small class="text-muted"><%= course.students.count %> students have already taken course</small>
+    </div>
+      </div>
+    </div>
+  <% end %>
+</div>
 <table>
   <thead>
     <tr>
@@ -31,13 +68,13 @@
 
 <br>
 
-<%= link_to 'New Course', new_course_path %><br/>
+<%#= link_to 'New Course', new_course_path %><br/>
 <% data = {}
   @courses.each do |course|
     data[course.name] = course.students.length
     end
 %>
-<%= data %>
+<%#= data %>
 
 <%= column_chart(data) %>
 <%= pie_chart(Course.show_chart) %>

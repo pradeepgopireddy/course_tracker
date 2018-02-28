@@ -1,0 +1,9 @@
+<% if @city.errors.any? %>
+	$('#errors').html("<%= escape_javascript render 'errors'%>")
+<% else %>
+$('#errors').hide();
+$('#addCity').modal('hide');
+$('#student_city_id').append('<option value="<%= @city.id%>" selected><%= @city.name %></option>');
+$('#student_city_id').trigger("chosen:updated");
+$('#new_city')[0].reset();
+<% end %>

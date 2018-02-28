@@ -5,6 +5,7 @@ class InstructorsController < ApplicationController
   # GET /instructors.json
   def index
     @instructors = Instructor.all
+    @instructor = Instructor.new
   end
 
   # GET /instructors/1
@@ -59,6 +60,11 @@ class InstructorsController < ApplicationController
       format.html { redirect_to instructors_url, notice: 'Instructor was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def check_email_present
+    @instructor = Instructor.find_by(email: params[:email])
+    render json: @instructor.nil? ? {msg: true} : {msg: false}
   end
 
   private

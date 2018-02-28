@@ -1,45 +1,50 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Instructors</h1>
+<div class="row">
+  <div class="col-md-8">
+    <h2>Listing Instructors</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th> # </th>
+          <th>Name</th>
+          <th>Email</th>
+          <!-- <th>Bio</th>
+          <th> Courses </th>
+          <th> Actions </th> -->
+        </tr>
+      </thead>
 
-<table>
-  <thead>
-    <tr>
-      <th> # </th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Bio</th>
-      <th> Courses </th>
-      <th> Actions </th>
-    </tr>
-  </thead>
+      <tbody>
+        <% @instructors.each_with_index do |instructor, index| %>
+          <tr id=<%= instructor.id %> class="instructors">
+            <td><%= index + 1 %></td>
+            <td> <button type="button" class="btn btn-link" data-toggle="modal" data-target="#instructorShow"><%=instructor.name%></button></td>
+            <td><%= instructor.email %></td>
+            <!-- <td><%= instructor.bio %></td>
+            <td>
+              <%# if instructor.courses.empty? %>
+                <p> N/A</p>
+              <% #else %>
+                <% #instructor.courses.each do |course| %>
+                  <%#= course.name %><br/>
+                <% #end %>
+              <% #end %>
+            </td>
+            <td><%#= link_to 'Edit', edit_instructor_path(instructor) %></td>
+            <td><%#= link_to 'Destroy', instructor, method: :delete, data: { confirm: 'Are you sure?' } %></td> -->
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-4">
+    <h3>Add Instructor</h3>
+    <%= render 'form', instructor: @instructor %>
+  </div>
+</div>
 
-  <tbody>
-    <% @instructors.each_with_index do |instructor, index| %>
-      <tr>
-        <td><%= index + 1 %></td>
-        <td><%= link_to instructor.name, instructor %></td>
-        <td><%= instructor.email %></td>
-        <td><%= instructor.bio %></td>
-        <td>
-          <% if instructor.courses.empty? %>
-            <p> N/A</p>
-          <% else %>
-            <% instructor.courses.each do |course| %>
-              <%= course.name %><br/>
-            <% end %>
-          <% end %>
-        </td>
-        <td><%= link_to 'Edit', edit_instructor_path(instructor) %></td>
-        <td><%#= link_to 'Destroy', instructor, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Instructor', new_instructor_path %>
+<%#= link_to 'New Instructor', new_instructor_path %>
 <% data = {}
   @instructors.each do |instructor|
     total = 0
@@ -49,6 +54,33 @@
     data[instructor.name] = total
 end
   %>
-  <%= data %>
-  <%= bar_chart(data) %>
-  <%= pie_chart(data) %>
+  <div class="row">
+    <div class="col-md-7">
+      <%= bar_chart(data) %>
+    </div>
+    <div class="col-md-5">
+      <%= pie_chart(data) %>
+    </div>
+  </div>
+  
+ <!-- Modal -->
+  <div class="modal fade" id="instructorShow" tabindex="-1" role="dialog" aria-labelledby="addCityLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCityLabel">Add City</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <!--   <%#= render 'show'  %> -->
+        </div>
+      </div>
+    </div>
+</div> 
+ <script type="text/javascript">
+   $('.instructors').click(function(){
+    alert("hello")
+   })
+ </script> 

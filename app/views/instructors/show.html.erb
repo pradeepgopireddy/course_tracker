@@ -1,5 +1,11 @@
-<p id="notice"><%= notice %></p>
-
+<% if notice %>
+	<div class="alert alert-success">
+		<%= notice %>
+	</div>
+<script>
+    $.growl.notice({ message: "instructor created sucessfully!" });
+</script>
+<% end %>
 <p>
   <strong>Name:</strong>
   <%= @instructor.name %>
