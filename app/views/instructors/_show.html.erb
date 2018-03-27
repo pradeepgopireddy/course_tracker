@@ -1,0 +1,27 @@
+<p>
+  <strong>Email:</strong>
+  <%= mail_to @instructor.email %>
+</p>
+
+<p>
+  <strong>Bio:</strong>
+  <%= @instructor.bio %>
+</p>
+<h3>Courses Taught</h3>
+<% if @instructor.courses.empty? %>
+	<p>Not yet any courses assigned</p>
+<% else %>
+	<ul>
+	<% @instructor.courses.each do |course| %>
+		<li><%= link_to course.name, course %> -
+			<%if course.registrations.pluck(:course_id).empty? %>
+			 	<span> 0 Enrollments </span>
+			<% else %>
+				<%= course.registrations.pluck(:course_id).size %> students enrolled
+			<% end %></li>
+	<% end %>
+	</ul>
+<% end %>
+
+<%= link_to 'Edit', edit_instructor_path(@instructor) %> |
+<%= link_to 'Back', instructors_path %>

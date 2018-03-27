@@ -12,6 +12,7 @@ class StudentsController < ApplicationController
   # GET /students/1
   # GET /students/1.json
   def show
+    render json: @student.attributes.merge({courses: @student.courses});
   end
 
   # GET /students/new

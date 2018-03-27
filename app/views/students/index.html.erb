@@ -3,7 +3,7 @@
   <div class="col-md-8">
     <h1>Listing Students</h1>
     <table class="table table-striped", id="studentsTable">
-      <thead>
+      <thead class="thead-dark">
         <tr>
           <th>Name</th>
           <th>Email</th>
@@ -15,7 +15,7 @@
 
       <tbody id ="tableBody">
         <% @students.each do |student| %>
-        <tr>
+        <tr id=<%= student.id %> class="students">
           <td><%= link_to student.name, student %></td>
           <td><%= student.email %></td>
           <td><%= student.major %></td>
@@ -72,9 +72,47 @@ end
 <%#= months_data %>
 <%= column_chart(years_data) %>
 <%= column_chart(months_data) %>
+
+
+<!-- Modal -->
+<div class="modal fade" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="addCourseLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="studentLabel"></h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+        <h5 id="studentEmail"></h5>
+        <h5 id="studentDob"></h5>
+        </div>
+      </div>
+    </div>
+</div>
 <script type="text/javascript">
 $('#student_city_id').chosen();
   $(document).ready(function(){
     $('#studentsTable').DataTable();
   });
+
+
+  $('.students').click(function(e){
+    e.preventDefault();
+    var xhr = new XMLHttpRequest();
+    console.log(e);
+    xhr.open('GET', `/students/${e.currentTarget.id}`,true);
+    xhr.onreadystatechange = function(){
+      if(xhr.readyState === 4 && xhr.status === 200){
+        response = JSON.parse(xhr.responseText);
+        console.log(response);
+        $('.modal-title').html(response.name);
+        $('#studentEmail').html(`<b>Email:</b> <span> ${response.email}</span>`);
+        $('#studentDob').html(`<b>DOB:</b> <span> ${response.dob}</span>`)
+        $('#studentModal').modal('show');
+      }
+    }
+    xhr.send();
+  })
 </script>

@@ -11,6 +11,10 @@ class InstructorsController < ApplicationController
   # GET /instructors/1
   # GET /instructors/1.json
   def show
+    respond_to do |format|
+      format.js
+      format.html
+    end
   end
 
   # GET /instructors/new

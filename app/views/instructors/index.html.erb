@@ -19,7 +19,7 @@
         <% @instructors.each_with_index do |instructor, index| %>
           <tr id=<%= instructor.id %> class="instructors">
             <td><%= index + 1 %></td>
-            <td> <button type="button" class="btn btn-link" data-toggle="modal" data-target="#instructorShow"><%=instructor.name%></button></td>
+            <td><%= link_to instructor.name, instructor, remote: true %></td>
             <td><%= instructor.email %></td>
             <!-- <td><%= instructor.bio %></td>
             <td>
@@ -68,19 +68,14 @@ end
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addCityLabel">Add City</h5>
+          <h5 class="modal-title" id="addCityLabel"></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-        <!--   <%#= render 'show'  %> -->
+
         </div>
       </div>
     </div>
-</div> 
- <script type="text/javascript">
-   $('.instructors').click(function(){
-    alert("hello")
-   })
- </script> 
+</div>  
